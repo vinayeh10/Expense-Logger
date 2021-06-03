@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import { Link } from "react-router-dom";
 import { Button, Form, Container, Header, Modal } from 'semantic-ui-react'
 
 
@@ -15,7 +16,8 @@ const ConfirmationModal = ({props}) => {
       >
         <Header content="Expense" />
         <Modal.Content>
-          <h3>Expense successfully added to your google sheet</h3>
+          <h3>Expense successfully logged</h3>
+          <Link to="/"> View your Expenses </Link>
         </Modal.Content>
         <Modal.Actions>
           <Button

@@ -4,30 +4,18 @@ import { Button, Form, Container, Header, Modal } from 'semantic-ui-react'
 
 
 const BulUpdateModal = ({props}) => {
-    const {bulkModalOpen} = props.state;
-    const handleBulkUpdateSubmit = props.handleBulkUpdateSubmit
     return (
-      <Modal key='2'
-        open={bulkModalOpen}
-        size="small"
-        closeOnEscape={true}
-        closeOnRootNodeClick={true}
-      >
-        <Header content="Expense" />
-        <Modal.Content>
-          <h3>Bulk update Modal</h3>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            positive
-            type="button"
-            icon="checkmark"
-            labelPosition="right"
-            onClick={handleBulkUpdateSubmit}
-            content="Submit"
-          />
-        </Modal.Actions>
-      </Modal>
+      <div class="ui card">
+        <div class="content">
+          <div class="header">Bulk Expense Logger</div>
+          <div class="meta">Coming soon...</div>
+          <div class="description">
+            <p>
+              Excited to bring this feature soon. Making expense logging bigger and faster! 
+            </p>
+          </div>
+        </div>
+      </div>
     );
 }
 

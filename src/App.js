@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
 import { Button, Form, Container, Header, Modal } from 'semantic-ui-react'
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 import axios from 'axios';
 import BulUpdateModal from './components/bulk-update-modal/bulk-update-modal';
-import ConfirmationModal from './components/confirmation-modal/confirmation-modal';
+import Logo from './assets/logo.png';
+import Logger from './components/Logger/logger';
+import ExpenseView from './components/Expense-View/expenseview';
 
 
 export default class App extends Component {
@@ -20,6 +28,7 @@ export default class App extends Component {
        modalOpen: false,
        bulkModalOpen: false
     }
+    console.log(this.props, props)
   }
 
   changeHandler = (e) => {
@@ -73,77 +82,146 @@ export default class App extends Component {
     console.log('done from modal');
   }
 
+  handleMenuClick() {
+    document.body.classList.toggle("menu-active");
+  }
+
 
   render() {
-    const { expense, date, category, note } = this.state;
     return (
-      <div>
-        <Container fluid className="container custom-align-container">
-          <Header as="h2">Expense Logger!</Header>
-          <Form className="ui large form" onSubmit={this.submitHandler}>
-            <Form.Field required>
-              <label>Expense</label>
-              <input
-                required
-                type="number"
-                value={expense}
-                placeholder="Enter your expense"
-                name="expense"
-                onChange={this.changeHandler}
-              />
-            </Form.Field>
-            <Form.Field required>
-              <label>Month</label>
-              <input
-                required
-                type="date"
-                placeholder="Enter expense date"
-                value={date}
-                name="date"
-                onChange={this.changeHandler}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Category</label>
-              <input
-                placeholder="Enter expense category (optional)"
-                name="category"
-                value={category}
-                onChange={this.changeHandler}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Note</label>
-              <textarea
-                rows="2"
-                placeholder="Enter Note (optional)"
-                name="note"
-                value={note}
-                onChange={this.changeHandler}
-              ></textarea>
-            </Form.Field>
-            {/* <Button color="blue" type="button" onClick={this.bulkUpdateModalhandler}>
-              Bulk log expense
-            </Button> */}
-            <Button compact={true} size="large" floated="right" color="blue" type="submit">
-              Submit
-            </Button>
-            <Button compact={true} size="large" floated="right" color="blue" type="button" onClick={this.resetForm}>
-              Reset
-            </Button>
-          </Form>
-        </Container>
+      <Router>
+        <nav className="navbar">
+          <div className="logo">
+            <img src={Logo} alt="Expense Logger" />
+          </div>
+          <div className="push-left">
+            <button
+              onClick={this.handleMenuClick}
+              id="menu-toggler"
+              data-class="menu-active"
+              className="hamburger"
+            >
+              <span className="hamburger-line hamburger-line-top"></span>
+              <span className="hamburger-line hamburger-line-middle"></span>
+              <span className="hamburger-line hamburger-line-bottom"></span>
+            </button>
+            <ul id="primary-menu" className="menu nav-menu">
+              <li className="menu-item current-menu-item" onClick={this.handleMenuClick}>
+                <Link
+                  activeClassName="nav-item-active"
+                  className="nav__link"
+                  exact
+                  to="/"
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="menu-item dropdown" onClick={this.handleMenuClick}>
+                <Link
+                  activeClassName="nav-item-active"
+                  className="nav__link"
+                  to="/expenselogger"
+                >
+                  Log Expense
+                </Link>
+              </li>
+              <li className="menu-item dropdown" onClick={this.handleMenuClick}>
+                <Link
+                  activeClassName="nav-item-active"
+                  className="nav__link"
+                  to="/bulkupdate"
+                >
+                  Bulk Logger
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
-        <ConfirmationModal props={{
-          state: this.state,
-          resetForm: this.resetForm
-        }} />
-      
-        {/* <BulUpdateModal props={{
-          state: this.state,
-          handleBulkUpdateSubmit: this.handleBulkUpdateSubmit
-        }} /> */}
-      </div>
+        <div className="main-app-container">
+          <Switch>
+            <Route path="/bulkupdate">
+              <BulUpdateModal />
+            </Route>
+            <Route path="/expenselogger">
+              <Logger />
+            </Route>
+            <Route path="/" component={props => <ExpenseView {...props} />} >
+            </Route>
+          </Switch>
+          {/* <Container fluid className="container custom-align-container">
+            <Form className="ui large form" onSubmit={this.submitHandler}>
+              <Form.Field required>
+                <label>Expense</label>
+                <input
+                  required
+                  type="number"
+                  value={expense}
+                  placeholder="Enter your expense"
+                  name="expense"
+                  onChange={this.changeHandler}
+                />
+              </Form.Field>
+              <Form.Field required>
+                <label>Month</label>
+                <input
+                  required
+                  type="date"
+                  placeholder="Enter expense date"
+                  value={date}
+                  name="date"
+                  onChange={this.changeHandler}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Category</label>
+                <input
+                  placeholder="Enter expense category (optional)"
+                  name="category"
+                  value={category}
+                  onChange={this.changeHandler}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Note</label>
+                <textarea
+                  rows="2"
+                  placeholder="Enter Note (optional)"
+                  name="note"
+                  value={note}
+                  onChange={this.changeHandler}
+                ></textarea>
+              </Form.Field>
+              <Button
+                compact={true}
+                size="large"
+                floated="right"
+                color="blue"
+                type="submit"
+              >
+                Log Expense
+              </Button>
+              <Button
+                compact={true}
+                size="large"
+                floated="right"
+                color="blue"
+                type="button"
+                onClick={this.resetForm}
+              >
+                Reset
+              </Button>
+            </Form>
+          </Container>
+
+          <ConfirmationModal
+            props={{
+              state: this.state,
+              resetForm: this.resetForm,
+            }}
+          /> */}
+        </div>
+      </Router>
     );
   }
 }
